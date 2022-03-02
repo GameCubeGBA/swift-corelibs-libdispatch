@@ -55,9 +55,8 @@ _dispatch_benchmark_init(void *context)
 
 	start = _dispatch_uptime();
 	do {
-		i++;
 		f(c);
-	} while (i < cnt);
+	} while (++i < cnt);
 	delta = _dispatch_uptime() - start;
 
 	lcost = delta;
@@ -108,9 +107,8 @@ dispatch_benchmark_f(size_t count, register void *ctxt,
 
 	start = _dispatch_uptime();
 	do {
-		i++;
 		func(ctxt);
-	} while (i < count);
+	} while (++i < count);
 	delta = _dispatch_uptime() - start;
 
 	conversion = delta;

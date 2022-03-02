@@ -24,7 +24,7 @@ DISPATCH_NOINLINE
 static void *
 __DISPATCH_WAIT_FOR_ENQUEUER__(void **ptr)
 {
-	int spins = 0;
+	unsigned int spins = 0;
 	void *value;
 	while ((value = os_atomic_load(ptr, relaxed)) == NULL) {
 		_dispatch_preemption_yield(++spins);
@@ -37,7 +37,7 @@ _dispatch_wait_for_enqueuer(void **ptr)
 {
 #if !DISPATCH_HW_CONFIG_UP
 #if (defined(__arm__) && defined(__APPLE__)) || defined(__arm64__)
-	int spins = DISPATCH_WAIT_SPINS_WFE;
+	unsigned int spins = DISPATCH_WAIT_SPINS_WFE;
 	void *value;
 	while (unlikely(spins-- > 0)) {
 		if (likely(value = __builtin_arm_ldrex(ptr))) {
@@ -47,7 +47,7 @@ _dispatch_wait_for_enqueuer(void **ptr)
 		__builtin_arm_wfe();
 	}
 #else
-	int spins = DISPATCH_WAIT_SPINS;
+	unsigned int spins = DISPATCH_WAIT_SPINS;
 	void *value;
 	while (unlikely(spins-- > 0)) {
 		if (likely(value = os_atomic_load(ptr, relaxed))) {
