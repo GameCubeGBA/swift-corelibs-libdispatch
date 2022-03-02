@@ -28,7 +28,7 @@ size_t strlcpy(char *dst, const char *src, size_t size)
 	if (size > 0) {
 		size_t n = size - 1;
 		strncpy(dst, src, n);
-		dst[n] = 0;
+		dst[n] = '\0';
 	}
 	return res;
 }
