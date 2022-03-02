@@ -1637,8 +1637,13 @@ format_hex_data(char *prefix, char *desc, uint8_t *data, size_t data_len,
  		bufprintf("%s%s:\n", prefix, desc);
 	}
 
-	ssize_t offset_in_row = -1;
-	for (i = 0; i < data_len; i++) {
+	if (data_len == 0) {
+		chars[0] = '\0';
+		return offset;
+	}
+
+	size_t offset_in_row;
+	do {
 		offset_in_row = i % 16;
 		if (offset_in_row == 0) {
 			if (i != 0) {
@@ -1648,14 +1653,14 @@ format_hex_data(char *prefix, char *desc, uint8_t *data, size_t data_len,
 		}
 		bufprintf(" %02x", pc[i]);
 		chars[offset_in_row] = (pc[i] < 0x20) || (pc[i] > 0x7e) ? '.' : pc[i];
-	}
+	} while (++i < data_len);
+
 	chars[offset_in_row + 1] = '\0';
 
 	if ((i % 16) != 0) {
-		while ((i % 16) != 0) {
+		do {
 			bufprintf("   ");
-			i++;
-		}
+		} while ((++i % 16) != 0);
 		bufprintf("  %s\n", chars);
 	}
 	return offset;
